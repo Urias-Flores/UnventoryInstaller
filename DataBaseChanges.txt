@@ -1,0 +1,84 @@
+CREATE PROCEDURE psLoadExpenses(Usuario varchar(60) , Tiempo int)
+BEGIN
+    IF Tiempo = 0 THEN
+        SELECT
+            g.GastoID, g.Fecha, g.Hora, us.Nombre, g.Total
+        FROM gasto AS g
+        INNER JOIN usuario as us ON us.UsuarioID = g.UsuarioID
+        WHERE g.Fecha = CURDATE()
+        AND (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY g.Fecha desc, g.Hora desc;
+    END IF;
+
+    IF Tiempo = 1 THEN
+        SELECT
+            g.GastoID, g.Fecha, g.Hora, us.Nombre, g.Total
+        FROM gasto AS g
+        INNER JOIN usuario as us ON us.UsuarioID = g.UsuarioID
+        WHERE g.Fecha between DATE_SUB(CURDATE(), interval (DAYOFWEEK(CURDATE())-1) DAY) AND CURDATE()
+        AND (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY g.Fecha desc, g.Hora desc;
+    END IF;
+
+    IF Tiempo = 2 THEN
+        SELECT
+            g.GastoID, g.Fecha, g.Hora, us.Nombre, g.Total
+        FROM gasto AS g
+        INNER JOIN usuario as us ON us.UsuarioID = g.UsuarioID
+        WHERE MONTH(g.Fecha) = MONTH(CURDATE())
+        AND (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY g.Fecha desc, g.Hora desc;
+    END IF;
+
+    IF Tiempo = 3 THEN
+        SELECT
+            g.GastoID, g.Fecha, g.Hora, us.Nombre, g.Total
+        FROM gasto AS g
+        INNER JOIN usuario as us ON us.UsuarioID = g.UsuarioID
+        WHERE YEAR(g.Fecha) = YEAR(CURDATE())
+        AND (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY g.Fecha desc, g.Hora desc;
+    END IF;
+
+    IF Tiempo = 4 THEN
+        SELECT
+            g.GastoID, g.Fecha, g.Hora, us.Nombre, g.Total
+        FROM gasto AS g
+        INNER JOIN usuario as us ON us.UsuarioID = g.UsuarioID
+        WHERE (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY G.Fecha desc, g.Hora desc;
+    END IF;
+END;
+
+CREATE PROCEDURE psLoadArching(Usuario varchar(60) , Tiempo int)
+BEGIN
+    IF Tiempo = 0 THEN
+        SELECT
+            ArqueoID, Fecha, Hora, us.Nombre, SaldoInicial, SaldoFinalSistema, SaldoFinalUsuario
+        FROM arqueo AS ar
+        INNER JOIN usuario as us ON us.UsuarioID = ar.UsuarioID
+        WHERE ar.Fecha between DATE_SUB(CURDATE(), interval (DAYOFWEEK(CURDATE())-1) DAY) AND CURDATE()
+        AND (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY ar.Fecha desc, ar.Hora desc;
+    END IF;
+
+    IF Tiempo = 1 THEN
+        SELECT
+            ArqueoID, Fecha, Hora, us.Nombre, SaldoInicial, SaldoFinalSistema, SaldoFinalUsuario
+        FROM arqueo AS ar
+        INNER JOIN usuario as us ON us.UsuarioID = ar.UsuarioID
+        WHERE MONTH(ar.Fecha) = MONTH(CURDATE())
+        AND (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY ar.Fecha desc, ar.Hora desc;
+    END IF;
+
+    IF Tiempo = 2 THEN
+        SELECT
+            ArqueoID, Fecha, Hora, us.Nombre, SaldoInicial, SaldoFinalSistema, SaldoFinalUsuario
+        FROM arqueo AS ar
+        INNER JOIN usuario as us ON us.UsuarioID = ar.UsuarioID
+        WHERE YEAR(ar.Fecha) = YEAR(CURDATE())
+        AND (us.Nombre = Usuario or ISNULL(Usuario) ) ORDER BY ar.Fecha desc, ar.Hora desc;
+    END IF;
+
+    IF Tiempo = 3 THEN
+        SELECT
+            ArqueoID, Fecha, Hora, us.Nombre, SaldoInicial, SaldoFinalSistema, SaldoFinalUsuario
+        FROM arqueo AS ar
+        INNER JOIN usuario as us ON us.UsuarioID = ar.UsuarioID
+        WHERE us.Nombre = Usuario or ISNULL(Usuario) ORDER BY ar.Fecha desc, ar.Hora desc;
+    END IF;
+END;
